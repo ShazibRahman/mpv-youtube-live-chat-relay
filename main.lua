@@ -11,9 +11,12 @@ local port
 
 local ON_WINDOWS = package.config:sub(1, 1) ~= "/"
 local python_path = ON_WINDOWS and "python" or "python3"
-local live_dump = utils.join_path(mp.get_script_directory(), "live_dump.py")
-local past_dump = utils.join_path(mp.get_script_directory(), "past_dump.py")
-local is_live = utils.join_path(mp.get_script_directory(), "is_live.py")
+
+local lib_path = utils.join_path(mp.get_script_directory(), "lib")
+local live_dump = utils.join_path(lib_path, "live_dump.py")
+local past_dump = utils.join_path(lib_path, "past_dump.py")
+local is_live = utils.join_path(lib_path, "is_live.py")
+
 local is_live_stream = false
 
 if not mp.get_script_directory() then
