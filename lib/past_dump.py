@@ -81,7 +81,8 @@ def download_and_save_chat(stream_id, output_file):
 def main():
     """Main function to initiate chat download and subtitle creation."""
     stream_id = sys.argv[1] if len(sys.argv) > 1 else "rQDF52_9Tn0"
-    output_file = pathlib.Path(__file__).parent / f"{stream_id}.txt"
+    output_file = pathlib.Path(__file__).parent.parent / f"{stream_id}.txt"
+    # print(output_file)
     try:
         download_and_save_chat(stream_id, output_file)
     except (NoChatReplay, KeyboardInterrupt):

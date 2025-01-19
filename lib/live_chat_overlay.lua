@@ -23,6 +23,8 @@ local last_position = 0 -- Track the last read position in the file
 
 local deque_timer
 
+local read_from_cleint_timer 
+
 local message_timeout = 6
 
 local client = nil
@@ -123,7 +125,7 @@ local function read_new_messages(chat_file_path)
 end
 
 local function read_from_cleint()
-    mp.add_periodic_timer(read_from_socket_interval, function()
+    read_from_cleint_timer = mp.add_periodic_timer(read_from_socket_interval, function()
         if not client then return end
         local response, err = client:receive()
 
@@ -236,12 +238,30 @@ local function start_chat_overlay(port, subtitle_file, interval)
         end)
 end
 
-
-
-
-
+local function unload_chat_overlay()
+    if deque_timer then
+        deque_timer:stop()
+        deque_timer = nil
+    end
+    if client then
+        client:close()
+        client = nil
+    end
+    if read_from_cleint_timer then
+        read_from_cleint_timer:stop()
+        read_from_cleint_timer = nil
+    end
+    clear_overlay()
+    mp.remove_key_binding("increase_no_of_lines_in_chat")
+    mp.remove_key_binding("decrease_no_of_lines_in_chat")
+    mp.remove_key_binding("increase_font_size_in_chat")
+    mp.remove_key_binding("decrease_font_size_in_chat")
+    mp.remove_key_binding("increase_message_timeout")
+    mp.remove_key_binding("decrease_message_timeout")
+end
 
 -- Exported Module
 return {
-    start_chat_overlay = start_chat_overlay
+    start_chat_overlay = start_chat_overlay,
+    unload_chat_overlay = unload_chat_overlay
 }

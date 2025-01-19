@@ -2,10 +2,12 @@
 Download live chat and stream it to clients via socket
 """
 
+import pathlib
 import socket
 import sys
 import textwrap
 from chat_downloader import ChatDownloader
+import os
 
 
 # Template for displaying chat messages in mpv
@@ -132,6 +134,13 @@ def main():
     stream_id = sys.argv[1]
     port = int(sys.argv[2])
     # file_path = pathlib.Path(__file__).parent.joinpath(f"{stream_id}.txt")
+    pid_file = pathlib.Path(__file__).parent.parent.joinpath(f"{stream_id}_pid.txt")
+    if pid_file.exists():
+        pid_file.unlink()
+    pid_file.write_text(str(os.getpid()))
+
+
+
 
     # print(f"Starting streaming to socket on port {port}")
     download_live_chat_to_socket(stream_id, port)
